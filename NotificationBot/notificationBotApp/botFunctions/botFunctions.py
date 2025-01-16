@@ -7,6 +7,7 @@ from aiogram import Router
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
 from uuid import uuid4
+from dbBot import add_notification_DB
 
 BOT_ROUTER = Router()
 
@@ -37,6 +38,7 @@ async def get_notification_date(message : Message, state : FSMContext):
     await state.update_data(notification_date = message.text)
     notification_data = await state.get_data()
     notification_id = uuid4()
+    print(await add_notification_DB(message.from_user.first_name, str(notification_id), notification_data["notification_text"], notification_data['notification_date']))
     await message.answer(f'{message.from_user.first_name}, ваше напоминание создано!\nID уведомления: {notification_id}\nНапоминание: {notification_data["notification_text"]}\nКогда напомнить: {notification_data["notification_date"]}')
     await state.clear()
 
